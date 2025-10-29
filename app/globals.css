@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .chat-container {
+    @apply flex flex-col h-screen bg-gray-50 dark:bg-gray-900;
+  }
+  
+  .chat-messages {
+    @apply flex-1 overflow-y-auto p-4 space-y-4;
+  }
+  
+  .message {
+    @apply flex items-start space-x-3 max-w-4xl mx-auto;
+  }
+  
+  .message-user {
+    @apply flex-row-reverse space-x-reverse;
+  }
+  
+  .message-content {
+    @apply bg-white dark:bg-gray-800 rounded-lg px-4 py-3 shadow-sm border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100;
+  }
+  
+  .message-user .message-content {
+    @apply bg-primary-500 text-white border-primary-500;
+  }
+  
+  .chat-input-container {
+    @apply border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4;
+  }
+  
+  .chat-input {
+    @apply flex items-center space-x-2 max-w-4xl mx-auto;
+  }
+  
+  .input-field {
+    @apply flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400;
+  }
+  
+  .send-button {
+    @apply bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+  }
+  
+  .file-upload-area {
+    @apply border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-primary-500 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-700;
+  }
+  
+  .file-upload-area.dragover {
+    @apply border-primary-500 bg-primary-50 dark:bg-primary-900;
+  }
+  
+  .dark-mode-toggle {
+    @apply bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors;
+  }
+}
+
