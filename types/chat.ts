@@ -4,6 +4,22 @@ export interface Message {
   role: 'user' | 'assistant';
   timestamp: Date;
   files?: UploadedFile[];
+  chartData?: ChartData;
+  chartImage?: string; // URL ou data URI da imagem do gráfico
+}
+
+export interface ChartData {
+  type?: 'line' | 'bar' | 'pie' | 'area';
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+    backgroundColor?: string | string[];
+    borderColor?: string;
+  }>;
+  title?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface UploadedFile {

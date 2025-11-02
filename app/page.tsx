@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Paperclip, X, FileText, Image, FileSpreadsheet, Sun, Moon } from 'lucide-react';
-import { Message, UploadedFile, WebhookPayload } from '@/types/chat';
+import { Message, UploadedFile, WebhookPayload, ChartData } from '@/types/chat';
 
 const WEBHOOK_URL = process.env.NEXT_PUBLIC_WEBHOOK_URL || 'http://localhost:5678/webhook/contabilidade-chat';
 
@@ -22,23 +22,28 @@ export default function ChatPage() {
     const day = now.toLocaleDateString('pt-BR', { 
       weekday: 'long', 
       day: 'numeric', 
-      month: 'long' 
+      month: 'long',
+      year: 'numeric'
     });
 
+    let greeting = '';
     if (hour >= 5 && hour < 12) {
-      return `Bom dia! ${day}`;
+      greeting = 'Bom dia!';
     } else if (hour >= 12 && hour < 18) {
-      return `Boa tarde! ${day}`;
+      greeting = 'Boa tarde!';
     } else {
-      return `Boa noite! ${day}`;
+      greeting = 'Boa noite!';
     }
+
+    return { greeting, date: day };
   };
 
   // Adicionar mensagem de boas-vindas quando o componente carrega
   useEffect(() => {
+    const { greeting, date } = getGreeting();
     const welcomeMessage: Message = {
       id: 'welcome',
-      content: `${getGreeting()}\n\nSou sua assistente de IA especializada em contabilidade. Posso ajudar você com:\n\n• Cálculos fiscais e tributários\n• Análise de documentos contábeis\n• Interpretação de leis fiscais\n• Relatórios financeiros\n• E muito mais!\n\nComo posso ajudá-lo hoje?`,
+      content: `${greeting}\n\n${date}\n\nSou sua assistente de IA especializada em contabilidade. Posso ajudar você com:\n\n• Cálculos fiscais e tributários\n• Análise de documentos contábeis\n• Interpretação de leis fiscais\n• Relatórios financeiros\n• E muito mais!\n\nComo posso ajudá-lo hoje?`,
       role: 'assistant',
       timestamp: new Date()
     };
@@ -145,11 +150,38 @@ export default function ChatPage() {
 
       const data = await response.json();
       
+      // Verificar se há dados de gráfico na resposta
+      let chartImage: string | undefined;
+      let chartData: ChartData | undefined;
+      
+      if (data.chartData || data.chart) {
+        chartData = data.chartData || data.chart;
+        try {
+          // Converter gráfico JSON em imagem
+          const chartResponse = await fetch('/api/chart-to-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(chartData),
+          });
+          
+          if (chartResponse.ok) {
+            const chartResult = await chartResponse.json();
+            chartImage = chartResult.dataUri;
+          }
+        } catch (error) {
+          console.error('Erro ao converter gráfico:', error);
+        }
+      }
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: data.message || data.response || 'Arquivo processado com sucesso!',
         role: 'assistant',
-        timestamp: new Date()
+        timestamp: new Date(),
+        chartData,
+        chartImage
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -241,18 +273,41 @@ export default function ChatPage() {
               </div>
             </div>
             <div className="message-content">
-              <p className="whitespace-pre-wrap">{message.content}</p>
-              {message.files && message.files.length > 0 && (
-                <div className="mt-2 space-y-1">
-                  {message.files.map((file) => (
-                    <div key={file.id} className="flex items-center space-x-2 text-sm opacity-75">
-                      {getFileIcon(file.type)}
-                      <span>{file.name}</span>
-                      <span className="text-xs">({(file.size / 1024).toFixed(1)} KB)</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="flex flex-col space-y-2">
+                <p className="whitespace-pre-wrap break-words">{message.content}</p>
+                
+                {/* Exibir gráfico se houver */}
+                {message.chartImage && (
+                  <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <img 
+                      src={message.chartImage} 
+                      alt="Gráfico"
+                      className="w-full h-auto"
+                      style={{ maxWidth: '100%', height: 'auto' }}
+                    />
+                  </div>
+                )}
+                
+                {message.timestamp && (
+                  <span className="text-xs opacity-60 mt-1">
+                    {message.timestamp.toLocaleTimeString('pt-BR', { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                  </span>
+                )}
+                {message.files && message.files.length > 0 && (
+                  <div className="mt-2 space-y-1 pt-2 border-t border-gray-200 dark:border-gray-700">
+                    {message.files.map((file) => (
+                      <div key={file.id} className="flex items-center space-x-2 text-sm opacity-75">
+                        {getFileIcon(file.type)}
+                        <span>{file.name}</span>
+                        <span className="text-xs">({(file.size / 1024).toFixed(1)} KB)</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
