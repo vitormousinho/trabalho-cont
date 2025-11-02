@@ -14,13 +14,14 @@
   }
   
   .chat-messages {
-    @apply flex-1 overflow-y-auto p-6 space-y-4 min-h-0;
+    @apply flex-1 overflow-y-auto space-y-4 min-h-0 py-8;
     max-width: 100%;
   }
   
   .message {
-    @apply flex items-start space-x-4 max-w-5xl mx-auto w-full;
+    @apply flex items-start space-x-4 mx-auto w-full px-8;
     min-width: 0;
+    max-width: 95%;
   }
   
   .message-user {
@@ -30,7 +31,7 @@
   .message-content {
     @apply bg-white dark:bg-gray-800 rounded-xl px-5 py-4 shadow-md border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100;
     @apply min-w-0 flex-1;
-    max-width: 85%;
+    max-width: 75%;
     font-size: 15px;
     line-height: 1.6;
   }
@@ -44,8 +45,9 @@
   }
   
   .chat-input {
-    @apply flex items-center space-x-3 max-w-5xl mx-auto;
-    width: 100%;
+    @apply flex items-center space-x-3 mx-auto px-8;
+    width: 95%;
+    max-width: none;
   }
   
   .input-field {
