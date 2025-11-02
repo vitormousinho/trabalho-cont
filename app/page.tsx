@@ -210,7 +210,7 @@ export default function ChatPage() {
     <div className="chat-container">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
-        <div className="w-full max-w-[95%] mx-auto flex items-center justify-between px-8">
+        <div className="w-full max-w-[800px] mx-auto flex items-center justify-between px-4">
           <div>
             <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
               Contabilidade IA Chat
@@ -359,7 +359,7 @@ export default function ChatPage() {
           <div className="flex items-end space-x-2 w-full">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex-shrink-0"
               title="Anexar arquivos"
             >
               <Paperclip className="w-5 h-5" />
@@ -368,11 +368,17 @@ export default function ChatPage() {
             <div className="flex-1 relative">
               <textarea
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                  // Auto-resize textarea
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = 'auto';
+                  target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
+                }}
                 onKeyPress={handleKeyPress}
                 placeholder={uploadedFiles.length > 0 ? "Digite uma mensagem ou pressione Enter para enviar os arquivos..." : "Digite sua pergunta sobre contabilidade..."}
                 className="input-field pr-12"
-                rows={1}
+                rows={2}
                 disabled={isLoading}
               />
               
@@ -398,7 +404,7 @@ export default function ChatPage() {
             <button
               onClick={sendMessage}
               disabled={isLoading || (!inputValue.trim() && uploadedFiles.length === 0)}
-              className="send-button"
+              className="send-button flex-shrink-0 min-h-[56px] px-6"
             >
               <Send className="w-5 h-5" />
             </button>

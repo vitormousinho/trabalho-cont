@@ -19,9 +19,11 @@
   }
   
   .message {
-    @apply flex items-start space-x-4 mx-auto w-full px-8;
+    @apply flex items-start space-x-4 mx-auto;
     min-width: 0;
-    max-width: 95%;
+    max-width: 800px;
+    width: 100%;
+    padding: 0 1rem;
   }
   
   .message-user {
@@ -30,8 +32,8 @@
   
   .message-content {
     @apply bg-white dark:bg-gray-800 rounded-xl px-5 py-4 shadow-md border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100;
-    @apply min-w-0 flex-1;
-    max-width: 75%;
+    @apply min-w-0;
+    max-width: 650px;
     font-size: 15px;
     line-height: 1.6;
   }
@@ -41,17 +43,22 @@
   }
   
   .chat-input-container {
-    @apply border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5;
+    @apply border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-4;
   }
   
   .chat-input {
-    @apply flex items-center space-x-3 mx-auto px-8;
-    width: 95%;
-    max-width: none;
+    @apply flex items-end space-x-3 mx-auto;
+    width: 100%;
+    max-width: 800px;
+    padding: 0 1rem;
   }
   
   .input-field {
-    @apply flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400;
+    @apply flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400;
+    min-height: 56px;
+    max-height: 200px;
+    font-size: 15px;
+    line-height: 1.5;
   }
   
   .send-button {
